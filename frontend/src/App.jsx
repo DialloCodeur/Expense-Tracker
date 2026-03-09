@@ -1,16 +1,20 @@
-//TODO: Install all tools i need to begin the project such as express, Mongoose, ... and
-import './App.css'
+//TODO: Finish the static dashboard and add interactivity using react
+//TODO: Implemente the add expense future
+
+import Navbar from "./components/Navbar"
+import Footer from "./components/Footer"
+import { Outlet } from "react-router-dom"
 
 function App() {
   return (
     <>
-      <div class="bg-cyan-500">
-        <h1 class="text-3xl font-bold">
-          DC EXPENSE TRACKER
-        </h1>
-      </div>
+      <Navbar />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
     </>
   )
 }
 
-export default App 
+export default App

@@ -1,0 +1,31 @@
+function FilterWordInput({ filterWordInput, onFilterWordInputChange, onFilterExpenses }) {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        onFilterExpenses(filterWordInput)
+    }
+    return (
+        <>
+            <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-blue-50 to-indigo-100 py-12 px-4">
+                <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+                    <form className="flex gap-2" onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            value={filterWordInput}
+                            placeholder="Food"
+                            className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                            onChange={(e) => onFilterWordInputChange(e.target.value)}
+                        />
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-medium transition duration-200"
+                        >
+                            Filter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default FilterWordInput
