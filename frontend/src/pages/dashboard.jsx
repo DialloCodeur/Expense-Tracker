@@ -1,4 +1,4 @@
-//TODO: Fnish 'Filter Expenses' feature and implement 'edit' and 'delete features'
+//TODO: Add delete, filter and edit features (Icons and feautres). Then add income feature and charts (expenses per category, expenses evolution and Incomes vs Expenses)
 
 import SummaryCards from "../components/SummaryCards"
 import Charts from "../components/Charts"
@@ -7,23 +7,64 @@ import QuickActions from "../components/QuickActions"
 import AddIncomeInput from "../components/AddIncomeInput"
 import AddExpenseInput from "../components/AddExpenseInput"
 import FilterWordInput from "../components/FilterWordInput"
-import { useState } from "react"
-
+import { useContext, useEffect, useState } from "react"
+import axios from "axios"
+import { ExpenseContext } from "../../store/ExpenseContext"
+//import { useNavigate } from "react-router-dom"
+//TODO: Fetch user expenses as soon as he logged in
 function Dashboard() {
 
     const [income, setIncome] = useState(0)
     const [isIncomeInputVisible, setIsIncomeInputVisible] = useState(false)
     const [input, setInput] = useState('')
-    const [expense, setExpense] = useState(0)
+    //const [expense, setExpense] = useState(0)
     const [isExpenseInputVisible, setIsExpenseInputVisible] = useState(false)
     const [expenseInput, setExpenseInput] = useState('')
     const [category, setCategory] = useState('')
     const [date, setDate] = useState('')
     const [description, setDescription] = useState('')
-    const [expenseDetails, setExpenseDetails] = useState([])
+    //const [expenseDetails, setExpenseDetails] = useState([])
     const [isFilterInputVisible, setIsFilterInputVisible] = useState(false)
     const [filterWordInput, setFilterWordInput] = useState('')
-    //const [filtredExpenses, setFiltredExpenses] = useState()
+    //const [filtredExpenses, setFiltredExpenses] = useState();
+    const token = localStorage.getItem("token");
+    const { expense, setExpense, expenseDetails, setExpenseDetails } = useContext(ExpenseContext)
+    useEffect(() => {
+        let ignore = false;
+        async function loadUserExpenses() {
+            try {
+                const response = await axios.get("/api/expenses", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                if (!ignore) {
+                    //console.log(response.data);
+                    const userExpenses = response.data;
+                    console.log(userExpenses)
+                    setExpenseDetails(response.data.map(exp => ({
+                        id: exp._id,
+                        amount: exp.amount,
+                        category: exp.category,
+                        date: exp.date,
+                        description: exp.description
+                    })));
+                    const amountsArray = [];
+                    for (let expense of response.data) {
+                        amountsArray.push(expense.amount)
+                    }
+                    setExpense(amountsArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+
+        loadUserExpenses();
+        return () => {
+            ignore = true;
+        }
+    }, [token, setExpense, setExpenseDetails]);
 
     const handleIncome = (updatedIncome) => {
         setIncome(prev => prev + updatedIncome);
@@ -73,7 +114,7 @@ function Dashboard() {
             date: dat,
             description: descrip
         }, ...expenseDetails])
-        console.log(expenseDetails)
+        console.log(expenseDetails);
         setCategory('')
         setDate('')
         setDescription('')
@@ -92,6 +133,30 @@ function Dashboard() {
     const handleFilterWordInput = (inputValue) => {
         setFilterWordInput(inputValue)
     }
+
+    const handleExpenseDeletion = async (id) => {
+        try {
+            const response = await axios.delete(`/api/expenses/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status != 204) {
+                return;
+            }
+            setExpenseDetails(expenseDetails.filter((expense) => expense.id != id))
+            const amountsArray = [];
+            //TODO: Learn about .gitignore file, Synchronize total of expenses after an expense deletion and total of expense on the dashboard (Summary Cards component)
+            for (let expense of expenseDetails) {
+                amountsArray.push(expense.amount)
+            }
+            const totalOfAmounts = amountsArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            console.log(totalOfAmounts)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
 
     if (isIncomeInputVisible) {
         return (
@@ -130,6 +195,7 @@ function Dashboard() {
             <Charts />
             <RecentExpenses
                 expenseDetails={expenseDetails}
+                onExpenseDeletionChange={handleExpenseDeletion}
             />
             <QuickActions
                 isIncomeInputVisible={isIncomeInputVisible}

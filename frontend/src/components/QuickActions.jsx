@@ -5,7 +5,6 @@ import FilterExpensesButton from "./FilterExpensesButton"
 function QuickActions({ isIncomeInputVisible, onIncomeInputVisibilityChange, isExpenseInputVisible, onExpenseInputVisibilityChange, isFilterInputVisible, onFilterInputVisibiltyChange }) {
     return (
         <>
-            {/* Quick Actions / Insights */}
             <section className="bg-white shadow rounded-lg p-4">
                 <h2 className="text-xl font-semibold mb-2">Quick Actions / Insights</h2>
                 <div className="h-32 bg-gray-100 flex items-center justify-center gap-8">

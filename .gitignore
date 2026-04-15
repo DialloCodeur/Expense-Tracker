@@ -1,0 +1,45 @@
+# ======================
+# ENV FILES (IMPORTANT)
+# ======================
+.env
+.env.*
+
+# ======================
+# NODE MODULES
+# ======================
+node_modules/
+
+# ======================
+# LOGS
+# ======================
+logs/
+*.log
+
+# ======================
+# BUILD FILES
+# ======================
+dist/
+build/
+
+# ======================
+# SYSTEM FILES
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# IDE FILES
+# ======================
+.vscode/
+.idea/
+
+# ======================
+# FRONTEND SPECIFIC
+# ======================
+frontend/node_modules/
+frontend/dist/
+
+# ======================
+# BACKEND SPECIFIC
+# ======================
+backend/node_modules/
