@@ -71,6 +71,9 @@ export const deleteExpense = async (req, res) => {
     try {
         const { id } = req.params;
         const deletedExpense = await Expense.findOneAndDelete({ _id: id, user: req.user.id });
+        if(!id){
+            return res.status(404).json({message: "Incorrect id"})
+        }
         if (!deletedExpense) {
             return res.status(404).json({ message: "Expense not found" });
         }

@@ -12,12 +12,18 @@ function App() {
 
   const [expense, setExpense] = useState(0);
   const [expenseDetails, setExpenseDetails] = useState([]);
+  const [expenseToUpdate, setExpenseToUpdate] = useState({})
   const navigate = useNavigate();
+
   const resetUser = () => {
     localStorage.removeItem("token");
     setExpense(0);
     setExpenseDetails([]);
     navigate("/");
+  }
+
+  const getExpenseToUpdate = (id) => {
+    setExpenseToUpdate(expenseDetails.find((expense) => expense.id == id));
   }
   return (
     <>
@@ -26,7 +32,9 @@ function App() {
         setExpense,
         expenseDetails,
         setExpenseDetails,
-        resetUser
+        expenseToUpdate,
+        resetUser,
+        getExpenseToUpdate
       }}>
         <Navbar />
         <main>

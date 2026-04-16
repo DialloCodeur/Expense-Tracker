@@ -106,13 +106,13 @@ function Dashboard() {
         setDescription(inputedDescription)
     }
 
-    const handleExpenseDetails = (amount, categ, dat, descrip) => {
+    const handleExpenseDetails = (id, amount, category, date, description) => {
         setExpenseDetails([{
-            id: Date.now(),
+            id: id,
             amount: amount,
-            category: categ,
-            date: dat,
-            description: descrip
+            category: category,
+            date: date,
+            description: description
         }, ...expenseDetails])
         console.log(expenseDetails);
         setCategory('')
@@ -141,17 +141,20 @@ function Dashboard() {
                     Authorization: `Bearer ${token}`
                 }
             });
+            console.log(id)
             if (response.status != 204) {
                 return;
             }
             setExpenseDetails(expenseDetails.filter((expense) => expense.id != id))
             const amountsArray = [];
-            //TODO: Learn about .gitignore file, Synchronize total of expenses after an expense deletion and total of expense on the dashboard (Summary Cards component)
             for (let expense of expenseDetails) {
-                amountsArray.push(expense.amount)
+                if(expense.id != id){
+                    amountsArray.push(expense.amount)
+                }
             }
             const totalOfAmounts = amountsArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            console.log(totalOfAmounts)
+            //console.log(totalOfAmounts)
+            setExpense(totalOfAmounts);
         } catch (error) {
             console.log(error.message);
         }

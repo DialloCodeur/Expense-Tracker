@@ -1,58 +1,55 @@
+import { useContext, useState } from "react"
+import { ExpenseContext } from "../../store/ExpenseContext"
 import axios from "axios";
-import { useState } from "react";
 
-function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, category, onCategoryChange, date, onDateChange, description, onDescriptionChange, onExpenseDetailsChange }) {
-
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true)
+function Update_Expense() {
+    const { expenseToUpdate } = useContext(ExpenseContext);
+    //console.log(expenseToUpdate.id)
+    const formatedDate = new Date(expenseToUpdate.date).toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    })
+    const [amount, setAmount] = useState(expenseToUpdate.amount);
+    const [category, setCategory] = useState(expenseToUpdate.category);
+    const [date, setDate] = useState(formatedDate);
+    const [description, setDescription] = useState(expenseToUpdate.description);
+    const token = localStorage.getItem("token");
+    const getUpdatedExpense = async () => {
         try {
-            const response = await axios.post("/api/expenses", {
-                amount: expenseInput,
+            const response = await axios.patch(`/api/expenses/${expenseToUpdate.id}`, {
+                amount,
                 category,
                 date,
-                description,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                description
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            })
-            const {_id, amount, category: newCategory, date: newDate, description: newDescription} = response.data;
-            const value = parseFloat(expenseInput) || 0;
-            onExpenseChange(value)
-            onExpenseDetailsChange(_id, amount, category, date, description);
-            //console.log(`EXPENSE: ${response.data}`)
+            );
+            //TODO: Uderstand why newCategory, newDate and newDescription in AddExpenseInput component are underlined by red line; Search how to get the update function (onExpenseDetailsChange) to update the interface after sumbmitting the form
+            const { amount, category, date, description } = response.data;
+            console.log(amount, category, date, description)
         } catch (error) {
-            setError(error.response?.data?.message);
-            console.log(`${error}`)
-        } finally {
-            setLoading(false)
+            console.log(error);
         }
-        
     }
     return (
         <>
             <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-blue-50 to-indigo-100 py-12 px-4">
                 <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-                    <form className="space-y-5" onSubmit={handleSubmit}>
-                        {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-                                {error}
-                            </div>
-                        )}
+                    <form className="space-y-5">
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-semibold text-gray-700">
                                 Amount
                             </label>
                             <input
                                 type="number"
-                                value={expenseInput}
-                                placeholder="2000"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
                                 className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                onChange={(e) => onExpenseInputChange(e.target.value)}
                             />
                         </div>
 
@@ -63,9 +60,8 @@ function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, 
                             <input
                                 type="text"
                                 value={category}
-                                placeholder="Food"
+                                onChange={(e) => setCategory(e.target.value)}
                                 className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                onChange={(e) => onCategoryChange(e.target.value)}
                             />
                         </div>
 
@@ -76,9 +72,8 @@ function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, 
                             <input
                                 type="date"
                                 value={date}
-                                placeholder="04/03/2026"
+                                onChange={(e) => setDate(e.target.value)}
                                 className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                onChange={(e) => onDateChange(e.target.value)}
                             />
                         </div>
 
@@ -89,16 +84,16 @@ function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, 
                             <input
                                 type="text"
                                 value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                                 className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                onChange={(e) => onDescriptionChange(e.target.value)}
                             />
                         </div>
                         <button
                             type="submit"
-                            disabled={loading}
                             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition duration-200 mt-6"
+                            onClick={getUpdatedExpense}
                         >
-                            {loading ? "Adding expense..." : "Add"}
+                            Update
                         </button>
                     </form>
                 </div>
@@ -107,4 +102,4 @@ function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, 
     )
 }
 
-export default AddExpenseInput
+export default Update_Expense

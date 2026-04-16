@@ -1,6 +1,17 @@
 import { SquarePen, Trash2 } from "lucide-react"
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { ExpenseContext } from "../../store/ExpenseContext";
 
 function RecentExpenses({ expenseDetails = [], onExpenseDeletionChange }) {
+    const navigate = useNavigate();
+    const [isUpdateFormVisible, setIsUpdateFormVisible] = useState(false);
+    const { getExpenseToUpdate } = useContext(ExpenseContext)
+    const displayUpdateForm = (id) => {
+        setIsUpdateFormVisible(!isUpdateFormVisible);
+        getExpenseToUpdate(id);
+        navigate("/update-expense");
+    }
     return (
         <section className="bg-white shadow-md rounded-lg p-6 border border-gray-100">
             <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
@@ -42,6 +53,7 @@ function RecentExpenses({ expenseDetails = [], onExpenseDeletionChange }) {
                                     <button
                                         type="button"
                                         className="p-2 rounded-md text-indigo-600 hover:bg-indigo-50"
+                                        onClick={() => displayUpdateForm(detail.id)}
                                     >
                                         <SquarePen size={16} />
                                     </button>

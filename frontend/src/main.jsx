@@ -12,41 +12,46 @@ import Login from './pages/login.jsx'
 import Dashboard from './pages/dashboard.jsx'
 import Add_Expense from './pages/add-expense.jsx'
 import Reports from './pages/reports.jsx'
+import Update_Expense from "./pages/update-expense.jsx"
 
 let router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
     children: [
       {
         index: true,
-        element: <Home/>
+        element: <Home />
       },
       {
         path: "register",
-        element: <Register/>
+        element: <Register />
       },
       {
         path: "login",
-        element: <Login/>
+        element: <Login />
       },
       {
         path: "dashboard",
-        element: <Dashboard/>
+        element: <Dashboard />
       },
       {
         path: "add_expense",
-        element: <Add_Expense/>
+        element: <Add_Expense />
       },
       {
         path: "reports",
-        element: <Reports/>
+        element: <Reports />
+      },
+      {
+        path: "update-expense",
+        element: <Update_Expense />
       }
     ]
   }
 ])
 
-createRoot(document.getElementById('root')).render( 
+createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
