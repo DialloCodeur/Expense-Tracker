@@ -42,24 +42,18 @@ function Register() {
         <>
             <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-blue-50 to-indigo-100 py-12 px-4">
                 <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-                    {/* Title */}
                     <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
                         Create Account
                     </h1>
                     <p className="text-gray-500 text-center text-sm mb-8">
                         Join us to manage your expenses
                     </p>
-
-                    {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Error Message */}
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                                 {error}
                             </div>
                         )}
-
-                        {/* Full Name */}
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-semibold text-gray-700">
                                 Full Name
@@ -73,7 +67,6 @@ function Register() {
                             />
                         </div>
 
-                        {/* Email */}
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-semibold text-gray-700">
                                 Email
@@ -87,7 +80,6 @@ function Register() {
                             />
                         </div>
 
-                        {/* Password */}
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-semibold text-gray-700">
                                 Password
@@ -101,7 +93,6 @@ function Register() {
                             />
                         </div>
 
-                        {/* Confirm Password */}
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-semibold text-gray-700">
                                 Confirm Password
@@ -115,7 +106,6 @@ function Register() {
                             />
                         </div>
 
-                        {/* Checkbox */}
                         <div className="flex items-center gap-3 pt-2">
                             <input
                                 type="checkbox"
@@ -127,7 +117,6 @@ function Register() {
                             </label>
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={loading}
@@ -136,7 +125,6 @@ function Register() {
                             {loading ? 'Creating Account...' : 'Create Account'}
                         </button>
 
-                        {/* Login Link */}
                         <p className="text-center text-sm text-gray-600 mt-4">
                             Already have an account?{' '}
                             <a href="/login" className="text-indigo-600 font-semibold hover:text-indigo-700">

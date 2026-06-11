@@ -11,8 +11,8 @@ import Register from './pages/register.jsx'
 import Login from './pages/login.jsx'
 import Dashboard from './pages/dashboard.jsx'
 import Add_Expense from './pages/add-expense.jsx'
-import Reports from './pages/reports.jsx'
 import Update_Expense from "./pages/update-expense.jsx"
+import Update_Income from './pages/update-income.jsx'
 
 let router = createBrowserRouter([
   {
@@ -40,12 +40,12 @@ let router = createBrowserRouter([
         element: <Add_Expense />
       },
       {
-        path: "reports",
-        element: <Reports />
-      },
-      {
         path: "update-expense",
         element: <Update_Expense />
+      },
+      {
+        path: "update-income",
+        element: <Update_Income />
       }
     ]
   }

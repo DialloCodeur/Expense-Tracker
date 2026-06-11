@@ -1,6 +1,7 @@
 import AddIncomeButton from "./AddIncomeButton"
 import AddExpenseButton from "./AddExpenseButton"
 import FilterExpensesButton from "./FilterExpensesButton"
+import UpdateIncomeButton from "./UpdateIncomeButton"
 
 function QuickActions({ isIncomeInputVisible, onIncomeInputVisibilityChange, isExpenseInputVisible, onExpenseInputVisibilityChange, isFilterInputVisible, onFilterInputVisibiltyChange }) {
     return (
@@ -12,6 +13,7 @@ function QuickActions({ isIncomeInputVisible, onIncomeInputVisibilityChange, isE
                         isIncomeInputVisible={isIncomeInputVisible}
                         onIncomeInputVisibilityChange={onIncomeInputVisibilityChange}
                     />
+                    <UpdateIncomeButton />
                     <AddExpenseButton
                         isExpenseInputVisible={isExpenseInputVisible}
                         onExpenseInputVisibilityChange={onExpenseInputVisibilityChange}

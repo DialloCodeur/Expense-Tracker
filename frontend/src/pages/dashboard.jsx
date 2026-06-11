@@ -1,5 +1,3 @@
-//TODO: Add delete, filter and edit features (Icons and feautres). Then add income feature and charts (expenses per category, expenses evolution and Incomes vs Expenses)
-
 import SummaryCards from "../components/SummaryCards"
 import Charts from "../components/Charts"
 import RecentExpenses from "../components/RecentExpenses"
@@ -10,25 +8,15 @@ import FilterWordInput from "../components/FilterWordInput"
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { ExpenseContext } from "../../store/ExpenseContext"
-//import { useNavigate } from "react-router-dom"
-//TODO: Fetch user expenses as soon as he logged in
+import { IncomeContext } from "../../store/IncomeContext"
 function Dashboard() {
-
-    const [income, setIncome] = useState(0)
-    const [isIncomeInputVisible, setIsIncomeInputVisible] = useState(false)
-    const [input, setInput] = useState('')
-    //const [expense, setExpense] = useState(0)
     const [isExpenseInputVisible, setIsExpenseInputVisible] = useState(false)
     const [expenseInput, setExpenseInput] = useState('')
-    const [category, setCategory] = useState('')
-    const [date, setDate] = useState('')
-    const [description, setDescription] = useState('')
-    //const [expenseDetails, setExpenseDetails] = useState([])
     const [isFilterInputVisible, setIsFilterInputVisible] = useState(false)
     const [filterWordInput, setFilterWordInput] = useState('')
-    //const [filtredExpenses, setFiltredExpenses] = useState();
     const token = localStorage.getItem("token");
-    const { expense, setExpense, expenseDetails, setExpenseDetails } = useContext(ExpenseContext)
+    const { income, setIncome, isIncomeInputVisible, setIsIncomeInputVisible, incomeInput, setIncomeInput, handleIncome } = useContext(IncomeContext)
+    const { expense, setExpense, expenseDetails, setExpenseDetails, category, setCategory, date, setDate, description, setDescription, handleExpenseDetails } = useContext(ExpenseContext)
     useEffect(() => {
         let ignore = false;
         async function loadUserExpenses() {
@@ -66,18 +54,36 @@ function Dashboard() {
         }
     }, [token, setExpense, setExpenseDetails]);
 
-    const handleIncome = (updatedIncome) => {
-        setIncome(prev => prev + updatedIncome);
-        setIsIncomeInputVisible(false);
-        setInput('');
-    }
+    useEffect(() => {
+        try {
+            async function loadUserIncome() {
+                const response = await axios.get("/api/income", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (!ignore) {
+                    const userIncome = response.data;
+                    userIncome.forEach((income) => income.amount && setIncome(income.amount));
+                }
+            }
+
+            let ignore = false;
+            loadUserIncome();
+            return () => {
+                ignore = true;
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [token, setIncome]);
 
     const handleIncomeInputVisibility = (isVisible) => {
         setIsIncomeInputVisible(isVisible)
     }
 
-    const handleInput = (inputValue) => {
-        setInput(inputValue)
+    const handleIncomeInput = (inputValue) => {
+        setIncomeInput(inputValue)
     }
 
     const handleExpense = (updatedExpense) => {
@@ -104,20 +110,6 @@ function Dashboard() {
 
     const handleDescription = (inputedDescription) => {
         setDescription(inputedDescription)
-    }
-
-    const handleExpenseDetails = (id, amount, category, date, description) => {
-        setExpenseDetails([{
-            id: id,
-            amount: amount,
-            category: category,
-            date: date,
-            description: description
-        }, ...expenseDetails])
-        console.log(expenseDetails);
-        setCategory('')
-        setDate('')
-        setDescription('')
     }
 
     const handleFiltredExpenses = (category) => {
@@ -148,7 +140,7 @@ function Dashboard() {
             setExpenseDetails(expenseDetails.filter((expense) => expense.id != id))
             const amountsArray = [];
             for (let expense of expenseDetails) {
-                if(expense.id != id){
+                if (expense.id != id) {
                     amountsArray.push(expense.amount)
                 }
             }
@@ -165,8 +157,8 @@ function Dashboard() {
         return (
             <main className="p-6 space-y-8">
                 <AddIncomeInput
-                    input={input}
-                    onInputChange={handleInput}
+                    incomeInput={incomeInput}
+                    onIncomeInputChange={handleIncomeInput}
                     onIncomeChange={handleIncome}
                 />
             </main>

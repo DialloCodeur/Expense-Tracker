@@ -20,10 +20,10 @@ function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, 
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             })
-            const {_id, amount, category: newCategory, date: newDate, description: newDescription} = response.data;
+            const { _id, amount, category: newCategory, date: newDate, description: newDescription } = response.data;
             const value = parseFloat(expenseInput) || 0;
             onExpenseChange(value)
-            onExpenseDetailsChange(_id, amount, category, date, description);
+            onExpenseDetailsChange(_id, amount, newCategory, newDate, newDescription);
             //console.log(`EXPENSE: ${response.data}`)
         } catch (error) {
             setError(error.response?.data?.message);
@@ -31,7 +31,7 @@ function AddExpenseInput({ expenseInput, onExpenseInputChange, onExpenseChange, 
         } finally {
             setLoading(false)
         }
-        
+
     }
     return (
         <>

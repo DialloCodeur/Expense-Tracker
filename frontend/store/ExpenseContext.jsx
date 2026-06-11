@@ -6,5 +6,9 @@ export const ExpenseContext = createContext({
     expenseDetails: [],
     expenseToUpdate: {},
     resetUser: () => { },
-    getExpenseToUpdate: () => { }
+    getExpenseToUpdate: () => { },
+    category: "",
+    date: "",
+    description: "",
+    handleExpenseDetails: () => { }
 });

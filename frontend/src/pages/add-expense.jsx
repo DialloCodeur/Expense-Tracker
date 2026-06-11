@@ -4,12 +4,10 @@ function Add_Expense() {
         <>
             <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-blue-50 to-indigo-100 py-12 px-4">
                 <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-                    {/* Title */}
                     <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
                         Add Expense
                     </h1>
 
-                    {/* Form */}
                     <form className="space-y-5">
 
                         <div className="flex flex-col gap-2">
