@@ -1,4 +1,3 @@
-//TODO: Understand why expenses are not retrieved when /api/expenses is called with GET method, test other routes with postmann and then begin the frontend implementation
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
@@ -6,6 +5,7 @@ import cors from "cors";
 import expenseRoutes from "./routes/expenseRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import incomeRoutes from "./routes/incomeRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -17,6 +17,7 @@ async function main() {
         app.use("/api/expenses", expenseRoutes);
         app.use("/api/auth", authRoutes);
         app.use("/api/users", userRoutes);
+        app.use("/api/income", incomeRoutes);
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
