@@ -20,10 +20,10 @@ function Home() {
                             Stay organized. Visualize your spending. Make informed financial decisions effortlessly.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                            <button className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition duration-200 shadow-lg hover:shadow-xl" onClick={() => navigate("/login")}>
+                            <button className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition duration-200 shadow-lg hover:shadow-xl cursor-pointer" onClick={() => navigate("/login")}>
                                 Get Started
                             </button>
-                            <button className="px-8 py-3 bg-white hover:bg-gray-50 text-indigo-600 font-semibold rounded-lg border-2 border-indigo-600 transition duration-200">
+                            <button className="px-8 py-3 bg-white hover:bg-gray-50 text-indigo-600 font-semibold rounded-lg border-2 border-indigo-600 transition duration-200 cursor-pointer">
                                 Learn More
                             </button>
                         </div>
@@ -57,7 +57,7 @@ function Home() {
                     <div className="max-w-4xl mx-auto px-6 text-center text-white space-y-6">
                         <h2 className="text-4xl md:text-5xl font-bold">Ready to Transform Your Finances?</h2>
                         <p className="text-lg opacity-90">Join thousands of users who are taking control of their spending today.</p>
-                        <button className="px-8 py-3 bg-white text-indigo-600 font-semibold rounded-lg hover:bg-gray-100 transition duration-200 inline-block" onClick={() => navigate("/login")}>
+                        <button className="px-8 py-3 bg-white text-indigo-600 font-semibold rounded-lg hover:bg-gray-100 transition duration-200 inline-block cursor-pointer" onClick={() => navigate("/login")}>
                             Start Free Today
                         </button>
                     </div>

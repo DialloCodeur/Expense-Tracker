@@ -15,19 +15,20 @@ function Register() {
         e.preventDefault();
         setError("");
 
-        if (password !== confirmedPassword) {
+        /*if (password !== confirmedPassword) {
             setError('Passwords do not match')
             setPassword("");
             setConfirmedPassword("");
             return;
-        }
+        }*/
 
         setLoading(true);
         try {
             const response = await axios.post("/api/auth/register", {
                 name: fullName,
                 email,
-                password
+                password,
+                confirmedPassword
             });
             console.log('Registration successful:', response.data);
             localStorage.setItem("token", response.data.token); //This wil not be used for production, i'll use cookies instead

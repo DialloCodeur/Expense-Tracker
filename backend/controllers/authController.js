@@ -4,7 +4,31 @@ import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, confirmedPassword } = req.body;
+        if (!name || !email || !password || !confirmedPassword) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        const nameRegex = /^[A-ZÀ-ÖØ-öø-ÿ]+(?:[ '\-][A-ZÀ-ÖØ-öø-ÿ]+)*$/i
+        if (!nameRegex.test(name)) {
+            return res.status(400).json({ message: "Name should contain only letters, spaces, hyphens or apostrophes" });
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email" });
+        }
+        const passwordRegex = /^[0-9A-Z!@#$%^&*]+$/i
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: "Password should contain only letters, numbers and !@#$%^&*" });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password should contain at least 6 characters" });
+        }
+        if (!/[A-Z]/i.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+            return res.status(400).json({ message: "Password must include letters, numbers and special characters" });
+        }
+        if (confirmedPassword !== password) {
+            return res.status(400).json({ message: "Passwords do not match" });
+        }
         const userExists = await User.findOne({ email });
         if (userExists) {
             return res.status(400).json({ message: "User already exists" });
