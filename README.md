@@ -1,8 +1,8 @@
-# Expense Tracker - Documentation du projet
+# MyFinance - Documentation du projet
 
 ## 1. Présentation
 
-Expense Tracker est une application web de gestion personnelle des finances. Elle permet à un utilisateur de suivre ses revenus et ses dépenses, de consulter un tableau de bord, de filtrer ses transactions et de gérer son profil.
+MyFinance est une application web de gestion personnelle des finances. Elle permet à un utilisateur de suivre ses revenus et ses dépenses, de consulter un tableau de bord, de filtrer ses transactions et de gérer son profil.
 
 L’application est structurée en deux parties :
 - un backend Node.js/Express avec MongoDB
