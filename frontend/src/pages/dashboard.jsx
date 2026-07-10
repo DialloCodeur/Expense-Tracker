@@ -64,6 +64,7 @@ function Dashboard() {
                 });
                 if (!ignore) {
                     const userIncome = response.data;
+                    console.log("Response_dashboard_loadUserIncome: ", userIncome);
                     userIncome.forEach((income) => income.amount && setIncome(income.amount));
                 }
             }

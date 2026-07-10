@@ -1,19 +1,26 @@
 import { useContext, useState } from "react"
 import { IncomeContext } from "../../store/IncomeContext"
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Update_Income() {
     const { income } = useContext(IncomeContext);
-    const [amount, setAmount] = useState(income);
+    const [amount, setAmount] = useState(income ?? "");
     const [isLoading, setIsLoading] = useState(false);
     const token = localStorage.getItem("token")
+    const navigate = useNavigate();
 
-    const handleUpdatedIncome = (e) => {
+    const handleUpdatedIncome = async (e) => {
         e.preventDefault();
+        const numericAmount = Number(amount);
+        if (Number.isNaN(numericAmount)) {
+            console.log("Income amount must be a number");
+            return;
+        }
         setIsLoading(true);
         try {
-            const response = axios.patch("/api/income", {
-                amount
+            const response = await axios.patch("/api/income", {
+                amount: numericAmount
             },
                 {
                     headers: {
@@ -21,7 +28,8 @@ function Update_Income() {
                     }
                 }
             )
-            console.log(response.data);
+            console.log("Response_update_income: ", response.data);
+            navigate("/dashboard");
         } catch (error) {
             console.log(error)
 
@@ -42,7 +50,7 @@ function Update_Income() {
                         />
                         <button
                             type="submit"
-                            disable
+                            disabled={isLoading}
                             className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-medium transition duration-200"
                         >
                             {isLoading ? "Updating income..." : "Update"}

@@ -15,8 +15,9 @@ export const createIncome = async (req, res) => {
 
 export const getIncome = async (req, res) => {
     try {
-        const allIncomes = await Income.find({ user: req.user.id });
-        res.status(200).json(allIncomes);
+        const income = await Income.find({ user: req.user.id });
+        console.log(income);
+        res.status(200).json(income);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -25,20 +26,19 @@ export const getIncome = async (req, res) => {
 export const updateIncome = async (req, res) => {
     try {
         const { amount } = req.body;
-        //const { id } = req.params;
-        const updatedIncome = await Income.findByIdAndUpdate({
-            //_id: id,
-            user: req.user.id
-        }, {
-            $set: amount
-        }, {
-            returnDocument: "after",
-            runValidators: true
-        });
-        if (!updateIncome) {
+        if (amount === undefined) {
+            return res.status(400).json({ message: "Amount is required" });
+        }
+        const updatedIncome = await Income.findOneAndUpdate(
+            { user: req.user.id },
+            { $set: { amount } },
+            { new: true, runValidators: true }
+        );
+        if (!updatedIncome) {
             return res.status(404).json({ message: "Income not found" })
         }
-        res.status(200).json(updateIncome);
+        console.log(updatedIncome);
+        res.status(200).json(updatedIncome);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
