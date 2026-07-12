@@ -28,8 +28,8 @@ function Dashboard() {
                 })
                 if (!ignore) {
                     //console.log(response.data);
-                    const userExpenses = response.data;
-                    console.log(userExpenses)
+                    /*const userExpenses = response.data;
+                    console.log(userExpenses)*/
                     setExpenseDetails(response.data.map(exp => ({
                         id: exp._id,
                         amount: exp.amount,
@@ -113,8 +113,21 @@ function Dashboard() {
         setDescription(inputedDescription)
     }
 
-    const handleFiltredExpenses = (category) => {
-        setExpenseDetails(expenseDetails.filter((expense) => expense.category.toLowerCase() == category.toLowerCase()))
+    const handleFiltredExpenses = async (category) => {
+        const response = await axios.get("/api/expenses", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const userExpenses = response.data;
+        const userExpensesDetails = userExpenses.map((expense) => ({
+            id: expense._id,
+            amount: expense.amount,
+            category: expense.category,
+            date: expense.date,
+            description: expense.description
+        }))
+        setExpenseDetails(userExpensesDetails.filter((expense) => expense.category.toLowerCase() == category.toLowerCase()))
         setIsFilterInputVisible(false)
         setFilterWordInput('')
     }
@@ -182,6 +195,17 @@ function Dashboard() {
             </main>
         )
     }
+    else if (isFilterInputVisible) {
+        return (
+            <main className="p-6 space-y-8">
+                <FilterWordInput
+                    filterWordInput={filterWordInput}
+                    onFilterWordInputChange={handleFilterWordInput}
+                    onFilterExpenses={handleFiltredExpenses}
+                />
+            </main>
+        )
+    }
     return (
         <main className="p-6 space-y-8">
             <SummaryCards
@@ -201,11 +225,6 @@ function Dashboard() {
                 isFilterInputVisible={isFilterInputVisible}
                 onFilterInputVisibiltyChange={handleFilterInputVisibilty}
             />
-            {isFilterInputVisible && <FilterWordInput
-                filterWordInput={filterWordInput}
-                onFilterWordInputChange={handleFilterWordInput}
-                onFilterExpenses={handleFiltredExpenses}
-            />}
         </main>
     )
 }

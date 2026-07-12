@@ -1,7 +1,20 @@
+import { useState } from "react"
+import { useNavigate } from "react-router-dom";
+
 function FilterWordInput({ filterWordInput, onFilterWordInputChange, onFilterExpenses }) {
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        onFilterExpenses(filterWordInput)
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            onFilterExpenses(filterWordInput);
+            navigate("/dashboard");
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
     }
     return (
         <>
@@ -19,7 +32,7 @@ function FilterWordInput({ filterWordInput, onFilterWordInputChange, onFilterExp
                             type="submit"
                             className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-medium transition duration-200"
                         >
-                            Filter
+                            {isLoading ? "Filtering..." : "Filter"}
                         </button>
                     </form>
                 </div>
