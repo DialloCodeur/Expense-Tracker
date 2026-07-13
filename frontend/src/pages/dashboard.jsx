@@ -14,6 +14,7 @@ function Dashboard() {
     const [expenseInput, setExpenseInput] = useState('')
     const [isFilterInputVisible, setIsFilterInputVisible] = useState(false)
     const [filterWordInput, setFilterWordInput] = useState('')
+    const [allExpenseDetails, setAllExpenseDetails] = useState([])
     const token = localStorage.getItem("token");
     const { income, setIncome, isIncomeInputVisible, setIsIncomeInputVisible, incomeInput, setIncomeInput, handleIncome } = useContext(IncomeContext)
     const { expense, setExpense, expenseDetails, setExpenseDetails, category, setCategory, date, setDate, description, setDescription, handleExpenseDetails } = useContext(ExpenseContext)
@@ -30,13 +31,15 @@ function Dashboard() {
                     //console.log(response.data);
                     /*const userExpenses = response.data;
                     console.log(userExpenses)*/
-                    setExpenseDetails(response.data.map(exp => ({
+                    const details = response.data.map(exp => ({
                         id: exp._id,
                         amount: exp.amount,
                         category: exp.category,
                         date: exp.date,
                         description: exp.description
-                    })));
+                    }));
+                    setAllExpenseDetails(details);
+                    setExpenseDetails(details);
                     const amountsArray = [];
                     for (let expense of response.data) {
                         amountsArray.push(expense.amount)
@@ -113,27 +116,29 @@ function Dashboard() {
         setDescription(inputedDescription)
     }
 
-    const handleFiltredExpenses = async (category) => {
-        const response = await axios.get("/api/expenses", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const userExpenses = response.data;
-        const userExpensesDetails = userExpenses.map((expense) => ({
-            id: expense._id,
-            amount: expense.amount,
-            category: expense.category,
-            date: expense.date,
-            description: expense.description
-        }))
-        setExpenseDetails(userExpensesDetails.filter((expense) => expense.category.toLowerCase() == category.toLowerCase()))
-        setIsFilterInputVisible(false)
-        setFilterWordInput('')
+    const handleFiltredExpenses = async (query) => {
+        const normalizedQuery = query?.trim().toLowerCase() || "";
+        const filteredDetails = normalizedQuery
+            ? allExpenseDetails.filter((expense) =>
+                expense.category.toLowerCase().includes(normalizedQuery) ||
+                expense.description.toLowerCase().includes(normalizedQuery)
+            )
+            : allExpenseDetails;
+
+        setExpenseDetails(filteredDetails);
     }
 
-    const handleFilterInputVisibilty = (isVisible) => {
-        setIsFilterInputVisible(isVisible)
+    const handleClearFilter = () => {
+        setExpenseDetails(allExpenseDetails);
+        setFilterWordInput("");
+    }
+
+    const handleFilterInputVisibility = (isVisible) => {
+        setIsFilterInputVisible(isVisible);
+
+        if (!isVisible) {
+            handleClearFilter();
+        }
     }
 
     const handleFilterWordInput = (inputValue) => {
@@ -195,19 +200,16 @@ function Dashboard() {
             </main>
         )
     }
-    else if (isFilterInputVisible) {
-        return (
-            <main className="p-6 space-y-8">
+    return (
+        <main className="p-6 space-y-8">
+            {isFilterInputVisible && (
                 <FilterWordInput
                     filterWordInput={filterWordInput}
                     onFilterWordInputChange={handleFilterWordInput}
                     onFilterExpenses={handleFiltredExpenses}
+                    onClearFilter={handleClearFilter}
                 />
-            </main>
-        )
-    }
-    return (
-        <main className="p-6 space-y-8">
+            )}
             <SummaryCards
                 income={income}
                 expense={expense}
@@ -223,7 +225,7 @@ function Dashboard() {
                 isExpenseInputVisible={isExpenseInputVisible}
                 onExpenseInputVisibilityChange={handleExpenseInputVisibility}
                 isFilterInputVisible={isFilterInputVisible}
-                onFilterInputVisibiltyChange={handleFilterInputVisibilty}
+                onFilterInputVisibilityChange={handleFilterInputVisibility}
             />
         </main>
     )
